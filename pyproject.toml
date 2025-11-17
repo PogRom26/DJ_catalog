@@ -1,0 +1,28 @@
+[project]
+name = "dj-catalog"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Roman Pogoreltcev",email = "romzes26@yandex.ru"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "python-dotenv (==1.2.1)",
+    "certifi (==2025.1.31)",
+    "charset-normalizer (==3.4.1)",
+    "datetime (==5.5)",
+    "idna (==3.10)",
+    "psycopg2-binary (==2.9.11)",
+    "pytz (==2025.2)",
+    "requests (==2.32.3)",
+    "setuptools (==78.1.1)",
+    "urllib3 (==2.4.0)",
+    "zope-interface (==7.2)",
+    "django (>=5.2.8,<6.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
