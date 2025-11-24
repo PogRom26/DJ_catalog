@@ -11,5 +11,5 @@ def contacts(request):
         name = request.POST.get("name")
         message = request.POST.get("message")
 
-        return HttpResponse(f'Спасибо {name}, сообщение получено!')
+        return HttpResponse(f"Спасибо {name}, сообщение получено!")
     return render(request, "catalog/contacts.html")

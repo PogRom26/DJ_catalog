@@ -1,9 +1,10 @@
 from django.test import TestCase
+
 from catalog.models import Category, Product
 
 
 class CatalogTestCase(TestCase):
-    fixtures = ['categories.json', 'products.json']
+    fixtures = ["categories.json", "products.json"]
 
     def test_fixtures_loaded(self):
         """Проверка что фикстуры загрузились"""
