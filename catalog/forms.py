@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from .models import Product
 
 
@@ -14,7 +15,18 @@ class ProductForm(forms.ModelForm):
                 attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Введите описание товара'}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
             'category': forms.Select(attrs={'class': 'form-control'}),
-            'price': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Введите цену'}),
+            'price': forms.NumberInput(
+                attrs={'class': 'form-control', 'placeholder': 'Введите цену', 'min': '0', 'step': '0.01'}),
+        }
+        labels = {
+            'name': 'Название товара',
+            'description': 'Описание товара',
+            'image': 'Изображение товара',
+            'category': 'Категория',
+            'price': 'Цена товара',
+        }
+        help_texts = {
+            'price': 'Цена должна быть положительным числом',
         }
 
     # Список запрещенных слов
@@ -29,7 +41,7 @@ class ProductForm(forms.ModelForm):
 
         for word in self.FORBIDDEN_WORDS:
             if word in name:
-                raise forms.ValidationError(
+                raise ValidationError(
                     f'Название содержит запрещенное слово: "{word}"'
                 )
 
@@ -42,8 +54,27 @@ class ProductForm(forms.ModelForm):
         if description:  # Проверяем только если описание не пустое
             for word in self.FORBIDDEN_WORDS:
                 if word in description:
-                    raise forms.ValidationError(
+                    raise ValidationError(
                         f'Описание содержит запрещенное слово: "{word}"'
                     )
 
         return self.cleaned_data['description']
+
+    def clean_price(self):
+        """Валидация цены продукта - проверка на отрицательные и нулевые значения"""
+        price = self.cleaned_data.get('price')
+
+        if price is None:
+            raise ValidationError('Поле цены обязательно для заполнения.')
+
+        if price < 0:
+            raise ValidationError(
+                'Цена не может быть отрицательной. Пожалуйста, введите положительное значение.'
+            )
+
+        if price == 0:
+            raise ValidationError(
+                'Цена не может быть нулевой. Пожалуйста, введите положительное значение.'
+            )
+
+        return price
