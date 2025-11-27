@@ -1,6 +1,4 @@
 from django.contrib import admin
-from django.urls import reverse
-from django.utils.html import format_html
 
 from .models import Category, Product
 
@@ -14,17 +12,10 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'price', 'category', 'view_product_link')
-    list_display_links = ('id', 'name')
-    list_filter = ('category',)
-    search_fields = ('name', 'description')
-
-    def view_product_link(self, obj):
-        url = reverse('catalog:product_detail', args=[obj.pk])
-        return format_html('<a href="{}">Посмотреть</a>', url)
-
-    view_product_link.short_description = 'Ссылка на страницу'
-
+    list_display = ("id", "name", "price", "category")  # Поля для отображения в списке
+    list_display_links = ("id", "name")  # Поля-ссылки для перехода к редактированию
+    list_filter = ("category",)  # Фильтрация по категории
+    search_fields = ("name", "description")  # Поля для поиска
 
     # Дополнительные настройки для удобства
     list_per_page = 20  # Количество элементов на странице
