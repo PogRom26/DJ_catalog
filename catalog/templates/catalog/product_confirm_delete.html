@@ -3,23 +3,47 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-        <h1 class="display-4">{{ title }}</h1>
-    </div>
-
+<div class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-8">
-            <div class="card mb-4 box-shadow">
-                <div class="card-body text-center">
-                    <h4>Вы уверены, что хотите удалить товар "{{ object.name }}"?</h4>
-                    <p class="text-muted">Это действие нельзя будет отменить.</p>
-                    
+        <div class="col-lg-6">
+            <div class="content-card">
+                <div class="page-header text-center">
+                    <h1 class="display-5 fw-bold">{{ title }}</h1>
+                </div>
+
+                <div class="card-body p-4 text-center">
+                    <div class="mb-4">
+                        <i class="bi bi-exclamation-triangle text-warning" style="font-size: 4rem;"></i>
+                    </div>
+
+                    <h4 class="fw-bold mb-3">Вы уверены, что хотите удалить товар?</h4>
+                    <p class="text-muted mb-4">
+                        Товар "<strong>{{ object.name }}</strong>" будет удален безвозвратно.
+                        Это действие нельзя будет отменить.
+                    </p>
+
+                    <div class="product-info bg-light p-3 rounded mb-4">
+                        <div class="row text-start">
+                            <div class="col-6">
+                                <strong>Категория:</strong><br>
+                                {{ object.category.name }}
+                            </div>
+                            <div class="col-6">
+                                <strong>Цена:</strong><br>
+                                {{ object.price }} ₽
+                            </div>
+                        </div>
+                    </div>
+
                     <form method="post">
                         {% csrf_token %}
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
-                            <a href="{% url 'catalog:product_detail' object.pk %}" class="btn btn-secondary me-md-2">Отмена</a>
-                            <button type="submit" class="btn btn-danger">Удалить</button>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                            <a href="{% url 'catalog:product_detail' object.pk %}" class="btn btn-outline-secondary me-md-2 px-4">
+                                <i class="bi bi-arrow-left me-2"></i>Отмена
+                            </a>
+                            <button type="submit" class="btn btn-danger px-4">
+                                <i class="bi bi-trash me-2"></i>Удалить
+                            </button>
                         </div>
                     </form>
                 </div>
