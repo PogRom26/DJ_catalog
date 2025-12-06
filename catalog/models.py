@@ -1,5 +1,7 @@
 from django.db import models
 
+from config import settings
+
 
 class Category(models.Model):
     """
@@ -27,9 +29,6 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-    """
-    Модель товара
-    """
     name = models.CharField(
         max_length=100,
         verbose_name='Наименование',
@@ -49,7 +48,7 @@ class Product(models.Model):
         null=True
     )
     category = models.ForeignKey(
-        Category,
+        'Category',
         on_delete=models.SET_NULL,
         verbose_name='Категория',
         help_text='Выберите категорию товара',
@@ -62,6 +61,17 @@ class Product(models.Model):
         verbose_name='Цена за покупку',
         help_text='Введите цену товара'
     )
+
+    # Поле owner - внешний ключ на пользователя
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        verbose_name='Владелец',
+        null=True,
+        blank=True,
+        related_name='products'
+    )
+
     created_at = models.DateTimeField(
         auto_now_add=True,
         verbose_name='Дата создания'

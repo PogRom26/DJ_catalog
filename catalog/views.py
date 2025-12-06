@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from .models import Product
+from .models import Product, Category
 from .forms import ProductForm
 
 
@@ -13,10 +13,22 @@ class HomeView(ListView):
     model = Product
     template_name = 'catalog/home.html'
     context_object_name = 'products'
+    paginate_by = 12  # Пагинация по 12 товаров на странице
+
+    def get_queryset(self):
+        """
+        Оптимизированный запрос с выборкой связанных данных
+        """
+        return Product.objects.all().select_related('category').order_by('-created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Skystore - Главная'
+
+        # Добавляем статистику для отображения
+        context['total_products'] = Product.objects.count()
+        context['total_categories'] = Category.objects.count()
+
         return context
 
 

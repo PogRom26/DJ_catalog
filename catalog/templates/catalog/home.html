@@ -1,6 +1,7 @@
 {% extends 'catalog/base.html' %}
+{% load i18n %}
 
-{% block title %}Skystore - Главная{% endblock %}
+{% block title %}{{ title }}{% endblock %}
 
 {% block content %}
 <div class="container py-5">
@@ -10,6 +11,10 @@
                 <div class="page-header text-center">
                     <h1 class="display-4 fw-bold">Skystore</h1>
                     <p class="lead mb-0">Лучший выбор товаров по доступным ценам</p>
+                    <p class="text-muted mt-2">
+                        {% trans "Total:" %} {{ total_products }} {% trans "products" %},
+                        {{ total_categories }} {% trans "categories" %}
+                    </p>
                 </div>
 
                 <div class="card-body p-4">
@@ -36,7 +41,7 @@
                                         {% if product.description %}
                                             {{ product.description|truncatechars:100 }}
                                         {% else %}
-                                            <span class="text-muted">Описание отсутствует</span>
+                                            <span class="text-muted">{% trans "No description" %}</span>
                                         {% endif %}
                                     </p>
 
@@ -46,7 +51,7 @@
                                         </div>
                                         <div class="d-grid gap-2">
                                             <a href="{% url 'catalog:product_detail' product.pk %}" class="btn btn-custom-primary">
-                                                <i class="bi bi-eye me-1"></i>Подробнее
+                                                <i class="bi bi-eye me-1"></i>{% trans "Details" %}
                                             </a>
                                         </div>
                                     </div>
@@ -55,14 +60,55 @@
                         </div>
                         {% endfor %}
                     </div>
+
+                    <!-- Пагинация -->
+                    {% if is_paginated %}
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">{% trans "First" %}</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">{% trans "Previous" %}</a>
+                            </li>
+                            {% endif %}
+
+                            <li class="page-item disabled">
+                                <span class="page-link">
+                                    {% trans "Page" %} {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }}
+                                </span>
+                            </li>
+
+                            {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">{% trans "Next" %}</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{% trans "Last" %}</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                    {% endif %}
+
                     {% else %}
                     <div class="text-center py-5">
                         <i class="bi bi-inbox display-1 text-muted"></i>
-                        <h3 class="text-muted mt-3">Товары отсутствуют</h3>
-                        <p class="text-muted">Будьте первым, кто добавит товар!</p>
+                        <h3 class="text-muted mt-3">{% trans "No products available" %}</h3>
+                        <p class="text-muted">{% trans "Be the first to add a product!" %}</p>
+
+                        {% if user.is_authenticated %}
                         <a href="{% url 'catalog:product_create' %}" class="btn btn-custom-primary btn-lg">
-                            <i class="bi bi-plus-circle me-2"></i>Добавить первый товар
+                            <i class="bi bi-plus-circle me-2"></i>{% trans "Add first product" %}
                         </a>
+                        {% else %}
+                        <p class="text-muted">
+                            {% trans "Please" %}
+                            <a href="{% url 'users:login' %}">{% trans "login" %}</a>
+                            {% trans "to add products" %}
+                        </p>
+                        {% endif %}
                     </div>
                     {% endif %}
                 </div>
