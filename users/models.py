@@ -7,12 +7,12 @@ class User(AbstractUser):
     """
     Кастомная модель пользователя
     """
-    # Делаем email обязательным и уникальным для авторизации
+    # Делаем emails обязательным и уникальным для авторизации
     email = models.EmailField(
-        _('email address'),
+        _('emails address'),
         unique=True,
         error_messages={
-            'unique': _("A user with that email already exists."),
+            'unique': _("A user with that emails already exists."),
         },
     )
 
@@ -41,14 +41,14 @@ class User(AbstractUser):
         help_text=_('Enter country')
     )
 
-    # Настройка полей для авторизации через email
-    USERNAME_FIELD = 'email'
+    # Настройка полей для авторизации через emails
+    USERNAME_FIELD = 'emails'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name']
 
     class Meta:
         verbose_name = _('User')
         verbose_name_plural = _('Users')
-        ordering = ['email']
+        ordering = ['emails']
 
     def __str__(self):
         return self.email

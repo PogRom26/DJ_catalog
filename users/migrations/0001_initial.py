@@ -92,14 +92,14 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "email",
+                    "emails",
                     models.EmailField(
                         error_messages={
-                            "unique": "A user with that email already exists."
+                            "unique": "A user with that emails already exists."
                         },
                         max_length=254,
                         unique=True,
-                        verbose_name="email address",
+                        verbose_name="emails address",
                     ),
                 ),
                 (
@@ -158,7 +158,7 @@ class Migration(migrations.Migration):
             options={
                 "verbose_name": "User",
                 "verbose_name_plural": "Users",
-                "ordering": ["email"],
+                "ordering": ["emails"],
             },
             managers=[
                 ("objects", django.contrib.auth.models.UserManager()),

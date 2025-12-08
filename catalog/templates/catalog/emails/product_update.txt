@@ -1,0 +1,13 @@
+Здравствуйте,
+
+Пользователь {{ user.username }} обновил товар и отправил его на повторную проверку:
+
+Название: {{ product.name }}
+Описание: {{ product.description|truncatewords:30 }}
+Цена: {{ product.price }}
+Дата обновления: {{ product.updated_at|date:"d.m.Y H:i" }}
+
+Для проверки перейдите по ссылке: {{ site_url }}{% url 'products:detail' product.pk %}
+
+---
+Это автоматическое уведомление от системы управления товарами.

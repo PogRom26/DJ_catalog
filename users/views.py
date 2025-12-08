@@ -18,7 +18,7 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.email = form.cleaned_data['email'].lower()
+            user.email = form.cleaned_data['emails'].lower()
             user.save()
 
             # Автоматический вход после регистрации
@@ -27,10 +27,10 @@ def register(request):
             # Отправка приветственного письма
             try:
                 send_welcome_email(user)
-                messages.success(request, _('Welcome email has been sent!'))
+                messages.success(request, _('Welcome emails has been sent!'))
             except Exception as e:
                 print(f"Email sending error: {e}")
-                messages.warning(request, _('Registration successful, but welcome email could not be sent.'))
+                messages.warning(request, _('Registration successful, but welcome emails could not be sent.'))
 
             messages.success(request, _('Registration successful! Welcome to Skystore!'))
             return redirect('catalog:home')
@@ -61,7 +61,7 @@ def user_login(request):
                 next_page = request.GET.get('next', 'catalog:home')
                 return redirect(next_page)
             else:
-                messages.error(request, _('Invalid email or password.'))
+                messages.error(request, _('Invalid emails or password.'))
     else:
         form = UserLoginForm()
 

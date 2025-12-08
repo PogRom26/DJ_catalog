@@ -11,7 +11,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('email', 'username', 'first_name', 'last_name', 'phone', 'country', 'avatar')
+        fields = ('emails', 'username', 'first_name', 'last_name', 'phone', 'country', 'avatar')
 
 
 class CustomUserChangeForm(UserChangeForm):
@@ -19,7 +19,7 @@ class CustomUserChangeForm(UserChangeForm):
 
     class Meta:
         model = User
-        fields = ('email', 'username', 'first_name', 'last_name', 'phone', 'country', 'avatar')
+        fields = ('emails', 'username', 'first_name', 'last_name', 'phone', 'country', 'avatar')
 
 
 # Формы для публичного использования
@@ -31,10 +31,10 @@ class UserRegisterForm(UserCreationForm):
         max_length=254,
         widget=forms.EmailInput(attrs={
             'class': 'form-control',
-            'placeholder': _('Enter your email'),
-            'autocomplete': 'email'
+            'placeholder': _('Enter your emails'),
+            'autocomplete': 'emails'
         }),
-        help_text=_('Required. Enter a valid email address.')
+        help_text=_('Required. Enter a valid emails address.')
     )
 
     password1 = forms.CharField(
@@ -59,7 +59,7 @@ class UserRegisterForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ('email', 'username', 'first_name', 'last_name', 'phone', 'country')
+        fields = ('emails', 'username', 'first_name', 'last_name', 'phone', 'country')
 
         widgets = {
             'username': forms.TextInput(attrs={
@@ -90,22 +90,22 @@ class UserRegisterForm(UserCreationForm):
         }
 
     def clean_email(self):
-        """Проверка уникальности email"""
-        email = self.cleaned_data.get('email').lower()
+        """Проверка уникальности emails"""
+        email = self.cleaned_data.get('emails').lower()
         if User.objects.filter(email=email).exists():
-            raise ValidationError(_('A user with this email already exists.'))
+            raise ValidationError(_('A user with this emails already exists.'))
         return email
 
 
 class UserLoginForm(AuthenticationForm):
-    """Форма авторизации пользователя по email"""
+    """Форма авторизации пользователя по emails"""
 
     username = forms.EmailField(
         label=_('Email'),
         widget=forms.EmailInput(attrs={
             'class': 'form-control',
-            'placeholder': _('Enter your email'),
-            'autocomplete': 'email'
+            'placeholder': _('Enter your emails'),
+            'autocomplete': 'emails'
         })
     )
 
@@ -120,7 +120,7 @@ class UserLoginForm(AuthenticationForm):
 
     error_messages = {
         'invalid_login': _(
-            "Please enter a correct email and password."
+            "Please enter a correct emails and password."
         ),
         'inactive': _("This account is inactive."),
     }
@@ -131,12 +131,12 @@ class UserProfileForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email', 'phone', 'country', 'avatar')
+        fields = ('first_name', 'last_name', 'emails', 'phone', 'country', 'avatar')
 
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'emails': forms.EmailInput(attrs={'class': 'form-control'}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'country': forms.TextInput(attrs={'class': 'form-control'}),
             'avatar': forms.FileInput(attrs={'class': 'form-control'}),
