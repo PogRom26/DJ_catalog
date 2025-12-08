@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import reverse_lazy
@@ -14,6 +14,59 @@ from .models import Product, Category
 from .forms import ProductForm, ProductStatusForm, ProductFilterForm
 from .mixins import OwnerRequiredMixin, ProductPermissionMixin, ProductContextMixin, FilterMixin
 
+
+class HomeView(TemplateView):
+    template_name = 'catalog/home.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Можно добавить контекст, например, последние товары
+        context['latest_products'] = Product.get_published_products()[:4]
+        context['categories'] = Category.objects.filter(is_active=True)[:6]
+        return context
+
+
+# Страница контактов
+class ContactView(TemplateView):
+    template_name = 'catalog/contact.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = _('Контакты')
+        return context
+
+    def post(self, request, *args, **kwargs):
+        """Обработка формы обратной связи"""
+        name = request.POST.get('name', '').strip()
+        email = request.POST.get('email', '').strip()
+        message = request.POST.get('message', '').strip()
+
+        if name and email and message:
+            try:
+                # Отправка email
+                subject = f"Новое сообщение от {name}"
+                body = f"""
+                Имя: {name}
+                Email: {email}
+                Сообщение:
+                {message}
+                """
+
+                send_mail(
+                    subject,
+                    body,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [settings.ADMIN_EMAIL],
+                    fail_silently=False,
+                )
+
+                messages.success(request, _('Ваше сообщение отправлено! Мы скоро ответим.'))
+            except Exception as e:
+                messages.error(request, _('Ошибка при отправке сообщения. Попробуйте позже.'))
+        else:
+            messages.error(request, _('Пожалуйста, заполните все поля.'))
+
+        return render(request, self.template_name, self.get_context_data())
 
 class ProductListView(ProductContextMixin, FilterMixin, ListView):
     """Список товаров с учётом прав доступа"""
