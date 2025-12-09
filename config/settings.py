@@ -1,6 +1,61 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+from datetime import timedelta
+
+# Настройки кеширования
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/1'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'PASSWORD': os.getenv('REDIS_PASSWORD', ''),
+            'SOCKET_CONNECT_TIMEOUT': 5,  # секунд
+            'SOCKET_TIMEOUT': 5,  # секунд
+            'CONNECTION_POOL_KWARGS': {
+                'max_connections': 100,
+            },
+            # Компрессия для экономии памяти
+            'COMPRESSOR': 'django_redis.compressors.zlib.ZlibCompressor',
+            'SERIALIZER': 'django_redis.serializers.json.JSONSerializer',
+        },
+        'KEY_PREFIX': 'dj_catalog',  # Префикс для всех ключей
+        'TIMEOUT': 60 * 60 * 24,  # Время жизни кеша по умолчанию: 24 часа
+    },
+
+    # Дополнительный кеш для сессий
+    'session': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/2'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'PASSWORD': os.getenv('REDIS_PASSWORD', ''),
+        },
+        'KEY_PREFIX': 'session',
+    },
+
+    # Кеш для запросов к базе данных
+    'database': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': os.getenv('REDIS_URL', 'redis://127.0.0.1:6379/3'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'PASSWORD': os.getenv('REDIS_PASSWORD', ''),
+        },
+        'KEY_PREFIX': 'db',
+    }
+}
+
+# Использование Redis для хранения сессий
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = 'session'
+
+# Настройки для production
+if os.getenv('ENVIRONMENT') == 'production':
+    CACHES['default']['OPTIONS']['SERIALIZER'] = 'django_redis.serializers.msgpack.MSGPackSerializer'
+    CACHES['default']['OPTIONS']['PICKLE_VERSION'] = -1
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
