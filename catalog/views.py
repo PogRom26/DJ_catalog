@@ -748,3 +748,93 @@ def _send_status_change_notification(product, owner, old_status, new_status, mod
         import logging
         logger = logging.getLogger(__name__)
         logger.error(f"Ошибка отправки уведомления об изменении статуса: {e}")
+
+
+# catalog/views.py (добавьте в конец файла)
+
+from django.http import HttpResponse
+from django.views.generic import ListView
+from .models import Category, Product
+
+
+# Простые заглушки для отсутствующих views
+class CategoryListView(ListView):
+    """Заглушка для списка категорий"""
+    model = Category
+    template_name = 'catalog/category_list.html'
+
+    def get(self, request, *args, **kwargs):
+        return HttpResponse("Страница категорий - функция в разработке")
+
+
+class CategoryDetailView(ListView):
+    """Заглушка для детальной страницы категории"""
+    model = Product
+    template_name = 'catalog/category_detail.html'
+
+    def get_queryset(self):
+        return Product.objects.filter(
+            category_id=self.kwargs.get('pk'),
+            is_active=True
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = Category.objects.filter(
+            pk=self.kwargs.get('pk')
+        ).first()
+        return context
+
+
+class CategoryProductsView(ListView):
+    """Заглушка для продуктов в категории"""
+    model = Product
+    template_name = 'catalog/category_products.html'
+
+    def get_queryset(self):
+        return Product.objects.filter(
+            category_id=self.kwargs.get('category_id'),
+            is_active=True
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = Category.objects.filter(
+            pk=self.kwargs.get('category_id')
+        ).first()
+        return context
+
+
+# Заглушки для управления кешем
+from django.contrib.auth.decorators import user_passes_test
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+
+
+@require_POST
+@user_passes_test(lambda u: u.is_staff)
+def clear_product_cache(request, pk):
+    """Заглушка для очистки кеша продукта"""
+    return JsonResponse({
+        'status': 'info',
+        'message': 'Функция очистки кеша в разработке'
+    })
+
+
+@require_POST
+@user_passes_test(lambda u: u.is_staff)
+def clear_similar_cache(request, pk):
+    """Заглушка для очистки кеша похожих товаров"""
+    return JsonResponse({
+        'status': 'info',
+        'message': 'Функция очистки кеша похожих товаров в разработке'
+    })
+
+
+def cache_stats_view(request):
+    """Заглушка для статистики кеша"""
+    return JsonResponse({
+        'status': 'info',
+        'message': 'Статистика кеша в разработке',
+        'stats': {}
+    })
