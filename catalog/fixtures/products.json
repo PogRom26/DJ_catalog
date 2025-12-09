@@ -1,0 +1,36 @@
+[
+  {
+    "model": "catalog.product",
+    "pk": 1,
+    "fields": {
+      "name": "Смартфон Xiaomi Redmi Note 13",
+      "description": "Смартфон с экраном 6.67 AMOLED, процессором Snapdragon 685, камерой 108 МП",
+      "category": 1,
+      "price": "24999.00",
+      "owner": null,
+      "publish_status": "published",
+      "published_at": "2024-01-15T10:30:00Z",
+      "is_active": true,
+      "views_count": 156,
+      "created_at": "2024-01-10T09:15:00Z",
+      "updated_at": "2024-01-15T10:30:00Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 2,
+    "fields": {
+      "name": "Ноутбук Lenovo IdeaPad 3",
+      "description": "Ноутбук с процессором Intel Core i5, 8 ГБ оперативной памяти, SSD 512 ГБ",
+      "category": 1,
+      "price": "54999.00",
+      "owner": null,
+      "publish_status": "published",
+      "published_at": "2024-01-12T14:20:00Z",
+      "is_active": true,
+      "views_count": 89,
+      "created_at": "2024-01-05T11:45:00Z",
+      "updated_at": "2024-01-12T14:20:00Z"
+    }
+  }
+]

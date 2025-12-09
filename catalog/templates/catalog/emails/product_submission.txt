@@ -1,0 +1,14 @@
+Здравствуйте,
+
+Пользователь {{ user.username }} ({{ user.email }}) отправил на проверку новый товар:
+
+Название: {{ product.name }}
+Описание: {{ product.description|truncatewords:30 }}
+Цена: {{ product.price }}
+Категория: {{ product.category.name|default:"Не указана" }}
+Дата создания: {{ product.created_at|date:"d.m.Y H:i" }}
+
+Для проверки перейдите по ссылке: {{ site_url }}{% url 'products:detail' product.pk %}
+
+---
+Это автоматическое уведомление от системы управления товарами.
