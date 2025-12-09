@@ -17,16 +17,11 @@ class BlogPost(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_('Дата создания'))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_('Дата обновления'))
     is_published = models.BooleanField(default=False, verbose_name=_('Опубликовано'))
-    published_at = models.DateTimeField(null=True, blank=True, verbose_name=_('Дата публикации'))
 
     class Meta:
         verbose_name = _('Запись блога')
         verbose_name_plural = _('Записи блога')
         ordering = ['-created_at']
-        permissions = [
-            ("can_publish_blog", _("Может публиковать записи блога")),
-            ("can_moderate_blog", _("Может модерировать блог")),
-        ]
 
     def __str__(self):
         return self.title

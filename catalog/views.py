@@ -260,7 +260,7 @@ class ProductUpdateView(LoginRequiredMixin, OwnerRequiredMixin, UpdateView):
 class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """Удаление товара - владелец или модератор"""
     model = Product
-    template_name = 'products/product_confirm_delete.html'
+    template_name = 'catalog/product_confirm_delete.html'
 
     def test_func(self):
         """Проверка прав на удаление"""
@@ -270,15 +270,15 @@ class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         # Владелец или модератор могут удалять
         return (
                 product.owner == user or
-                user.has_perm('products.delete_product')
+                user.has_perm('catalog.delete_product')
         )
 
     def get_success_url(self):
         # Если пользователь модератор, возвращаем в список товаров
         # Если владелец - в список своих товаров
-        if self.request.user.has_perm('products.delete_product'):
-            return reverse_lazy('products:list')
-        return reverse_lazy('products:my_products')
+        if self.request.user.has_perm('catalog.delete_product'):
+            return reverse_lazy('catalog:list')
+        return reverse_lazy('catalog:my_products')
 
     def delete(self, request, *args, **kwargs):
         """Обработка удаления с уведомлением"""
@@ -289,7 +289,7 @@ class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         response = super().delete(request, *args, **kwargs)
 
         # Отправляем уведомление владельцу, если удалил модератор
-        if (request.user.has_perm('products.delete_product') and
+        if (request.user.has_perm('catalog.delete_product') and
                 request.user != product_owner and
                 product_owner and
                 product_owner.email):
@@ -325,7 +325,7 @@ class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 # Декораторные представления для действий с публикацией
 
 @login_required
-@permission_required('products.can_publish_product', raise_exception=True)
+@permission_required('catalog.can_publish_product', raise_exception=True)
 def publish_product(request, pk):
     """Публикация товара - только модераторы"""
     product = get_object_or_404(Product, pk=pk)
@@ -353,7 +353,7 @@ def publish_product(request, pk):
 
 
 @login_required
-@permission_required('products.can_unpublish_product', raise_exception=True)
+@permission_required('catalog.can_unpublish_product', raise_exception=True)
 def unpublish_product(request, pk):
     """Отмена публикации товара - только модераторы"""
     product = get_object_or_404(Product, pk=pk)
@@ -381,7 +381,7 @@ def unpublish_product(request, pk):
 
 
 @login_required
-@permission_required('products.can_change_publish_status', raise_exception=True)
+@permission_required('catalog.can_change_publish_status', raise_exception=True)
 def change_product_status(request, pk):
     """Изменение статуса товара - только модераторы"""
     product = get_object_or_404(Product, pk=pk)

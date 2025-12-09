@@ -1,93 +1,36 @@
 [
-{
-  "model": "catalog.product",
-  "pk": 1,
-  "fields": {
-    "name": "iPhone 15",
-    "description": "Смартфон Apple с камерой 48 МП",
-    "image": "",
-    "category": 1,
-    "price": "84999.99",
-    "created_at": "2025-11-24T04:48:55.794Z",
-    "updated_at": "2025-11-24T04:51:17.119Z"
+  {
+    "model": "catalog.product",
+    "pk": 1,
+    "fields": {
+      "name": "Смартфон Xiaomi Redmi Note 13",
+      "description": "Смартфон с экраном 6.67 AMOLED, процессором Snapdragon 685, камерой 108 МП",
+      "category": 1,
+      "price": "24999.00",
+      "owner": null,
+      "publish_status": "published",
+      "published_at": "2024-01-15T10:30:00Z",
+      "is_active": true,
+      "views_count": 156,
+      "created_at": "2024-01-10T09:15:00Z",
+      "updated_at": "2024-01-15T10:30:00Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 2,
+    "fields": {
+      "name": "Ноутбук Lenovo IdeaPad 3",
+      "description": "Ноутбук с процессором Intel Core i5, 8 ГБ оперативной памяти, SSD 512 ГБ",
+      "category": 1,
+      "price": "54999.00",
+      "owner": null,
+      "publish_status": "published",
+      "published_at": "2024-01-12T14:20:00Z",
+      "is_active": true,
+      "views_count": 89,
+      "created_at": "2024-01-05T11:45:00Z",
+      "updated_at": "2024-01-12T14:20:00Z"
+    }
   }
-},
-{
-  "model": "catalog.product",
-  "pk": 2,
-  "fields": {
-    "name": "Футболка хлопковая",
-    "description": "Комфортная футболка из 100% хлопка",
-    "image": "",
-    "category": 2,
-    "price": "1999.99",
-    "created_at": "2025-11-24T04:48:55.815Z",
-    "updated_at": "2025-11-24T04:48:55.815Z"
-  }
-},
-{
-  "model": "catalog.product",
-  "pk": 3,
-  "fields": {
-    "name": "Война и мир",
-    "description": "Роман Льва Толстого в твердом переплете",
-    "image": "",
-    "category": 3,
-    "price": "1500.00",
-    "created_at": "2025-11-24T04:48:55.816Z",
-    "updated_at": "2025-11-24T04:48:55.816Z"
-  }
-},
-{
-  "model": "catalog.product",
-  "pk": 4,
-  "fields": {
-    "name": "Беговая дорожка",
-    "description": "Электрическая беговая дорожка для дома",
-    "image": "",
-    "category": 4,
-    "price": "34999.50",
-    "created_at": "2025-11-24T04:48:55.817Z",
-    "updated_at": "2025-11-24T04:48:55.817Z"
-  }
-},
-{
-  "model": "catalog.product",
-  "pk": 5,
-  "fields": {
-    "name": "Офисное кресло",
-    "description": "Эргономичное кресло для работы",
-    "image": "",
-    "category": 5,
-    "price": "12500.00",
-    "created_at": "2025-11-24T04:48:55.817Z",
-    "updated_at": "2025-11-24T04:48:55.817Z"
-  }
-},
-{
-  "model": "catalog.product",
-  "pk": 6,
-  "fields": {
-    "name": "MacBook Air",
-    "description": "Ноутбук Apple на чипе M2",
-    "image": "",
-    "category": 1,
-    "price": "119999.00",
-    "created_at": "2025-11-24T04:48:55.818Z",
-    "updated_at": "2025-11-24T04:48:55.818Z"
-  }
-},
-{
-  "model": "catalog.product",
-  "pk": 7,
-  "fields": {
-    "name": "Джинсы",
-    "description": "Классические джинсы синего цвета",
-    "image": "",
-    "category": 2,
-    "price": "3999.99",
-    "created_at": "2025-11-24T04:48:55.819Z",
-    "updated_at": "2025-11-24T04:48:55.819Z"
-  }
-}
 ]

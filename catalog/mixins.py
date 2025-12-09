@@ -79,7 +79,7 @@ class ProductPermissionMixin:
         if product.owner == user:
             return True
 
-        if user.has_perm('products.can_view_all_products'):
+        if user.has_perm('catalog.can_view_all_products'):
             return True
 
         return False
@@ -95,7 +95,7 @@ class ProductPermissionMixin:
             return True
 
         # Модераторы могут редактировать любые товары
-        if user.has_perm('products.change_product'):
+        if user.has_perm('catalog.change_product'):
             return True
 
         return False
@@ -111,7 +111,7 @@ class ProductPermissionMixin:
             return True
 
         # Модераторы могут удалять любые товары
-        if user.has_perm('products.delete_product'):
+        if user.has_perm('catalog.delete_product'):
             return True
 
         return False
@@ -119,17 +119,17 @@ class ProductPermissionMixin:
     @staticmethod
     def can_publish_product(user):
         """Может ли пользователь публиковать товары"""
-        return user.is_authenticated and user.has_perm('products.can_publish_product')
+        return user.is_authenticated and user.has_perm('catalog.can_publish_product')
 
     @staticmethod
     def can_unpublish_product(user):
         """Может ли пользователь отменять публикацию"""
-        return user.is_authenticated and user.has_perm('products.can_unpublish_product')
+        return user.is_authenticated and user.has_perm('catalog.can_unpublish_product')
 
     @staticmethod
     def can_change_status(user):
         """Может ли пользователь изменять статус публикации"""
-        return user.is_authenticated and user.has_perm('products.can_change_publish_status')
+        return user.is_authenticated and user.has_perm('catalog.can_change_publish_status')
 
     @staticmethod
     def can_manage_all_products(user):

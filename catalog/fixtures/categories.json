@@ -1,42 +1,56 @@
 [
-{
-  "model": "catalog.category",
-  "pk": 1,
-  "fields": {
-    "name": "Электроника",
-    "description": "Смартфоны, ноутбуки, планшеты и другая техника"
+  {
+    "model": "catalog.category",
+    "pk": 1,
+    "fields": {
+      "name": "Электроника",
+      "description": "Техника, гаджеты, компьютеры и мобильные устройства",
+      "is_active": true
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 2,
+    "fields": {
+      "name": "Одежда",
+      "description": "Мужская, женская и детская одежда, обувь и аксессуары",
+      "is_active": true
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 3,
+    "fields": {
+      "name": "Книги",
+      "description": "Художественная и научная литература, учебники, журналы",
+      "is_active": true
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 4,
+    "fields": {
+      "name": "Дом и сад",
+      "description": "Мебель, предметы интерьера, товары для сада и огорода",
+      "is_active": true
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 5,
+    "fields": {
+      "name": "Спорт и отдых",
+      "description": "Спортивный инвентарь, туристическое снаряжение, товары для активного отдыха",
+      "is_active": true
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 6,
+    "fields": {
+      "name": "Красота и здоровье",
+      "description": "Косметика, парфюмерия, средства для ухода и медицинские товары",
+      "is_active": true
+    }
   }
-},
-{
-  "model": "catalog.category",
-  "pk": 2,
-  "fields": {
-    "name": "Одежда",
-    "description": "Мужская, женская и детская одежда"
-  }
-},
-{
-  "model": "catalog.category",
-  "pk": 3,
-  "fields": {
-    "name": "Книги",
-    "description": "Художественная и образовательная литература"
-  }
-},
-{
-  "model": "catalog.category",
-  "pk": 4,
-  "fields": {
-    "name": "Спорт",
-    "description": "Спортивный инвентарь и одежда"
-  }
-},
-{
-  "model": "catalog.category",
-  "pk": 5,
-  "fields": {
-    "name": "Мебель",
-    "description": "Мебель для дома и офиса"
-  }
-}
 ]
