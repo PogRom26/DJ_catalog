@@ -1,6 +1,7 @@
+import time
+
 from django.core.management.base import BaseCommand
 from django_redis import get_redis_connection
-import time
 
 
 class Command(BaseCommand):
