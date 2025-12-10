@@ -17,6 +17,8 @@ CACHES = {
             "CONNECTION_POOL_KWARGS": {
                 "max_connections": 100,
             },
+            'KEY_PREFIX': 'mailing_service',
+            'IGNORE_EXCEPTIONS': True,
             # Компрессия для экономии памяти
             "COMPRESSOR": "django_redis.compressors.zlib.ZlibCompressor",
             "SERIALIZER": "django_redis.serializers.json.JSONSerializer",
@@ -77,6 +79,7 @@ INSTALLED_APPS = [
     "catalog",
     "users",
     "blog",
+    "mailing",
 ]
 
 MIDDLEWARE = [
@@ -162,3 +165,4 @@ SERVER_EMAIL = os.getenv("SERVER_EMAIL", DEFAULT_FROM_EMAIL)
 # Для тестирования в разработке
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
