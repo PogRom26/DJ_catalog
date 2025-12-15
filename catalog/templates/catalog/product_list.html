@@ -1,41 +1,377 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Список продуктов</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-4">
-        <h1>Список продуктов</h1>
+{% extends 'catalog/base.html' %}
 
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
+{% block title %}Каталог товаров - Skystore{% endblock %}
 
-        <a href="{% url 'product_create' %}" class="btn btn-success mb-3">Добавить продукт</a>
+{% block content %}
+<div class="container py-5">
+    <!-- Заголовок страницы -->
+    <div class="content-card mb-4">
+        <div class="page-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 class="display-5 fw-bold mb-2">
+                        <i class="bi bi-grid-3x3-gap-fill me-2"></i>Каталог товаров
+                    </h1>
+                    <p class="lead mb-0">Найдите идеальный товар для себя</p>
+                </div>
+                {% if user.is_authenticated %}
+                <a href="{% url 'catalog:product_create' %}" class="btn btn-custom-primary btn-lg">
+                    <i class="bi bi-plus-circle me-2"></i>Добавить товар
+                </a>
+                {% endif %}
+            </div>
+        </div>
 
-        {% if products %}
-            <div class="row">
-                {% for product in products %}
-                    <div class="col-md-6 mb-3">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ product.name }}</h5>
-                                <p class="card-text">{{ product.description|truncatewords:20 }}</p>
-                                <p class="card-text"><strong>Цена: {{ product.price }} руб.</strong></p>
-                                <a href="{% url 'product_detail' product.pk %}" class="btn btn-info btn-sm">Подробнее</a>
-                                <a href="{% url 'product_update' product.pk %}" class="btn btn-warning btn-sm">Редактировать</a>
-                                <a href="{% url 'product_delete' product.pk %}" class="btn btn-danger btn-sm">Удалить</a>
-                            </div>
+        <!-- Фильтры и статистика -->
+        <div class="p-4">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control" placeholder="Поиск товаров..." id="searchInput">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex justify-content-end gap-2">
+                        <div class="btn-group">
+                            <button class="btn btn-outline-secondary" onclick="filterProducts('all')">
+                                Все
+                            </button>
+                            <button class="btn btn-outline-secondary" onclick="filterProducts('published')">
+                                Опубликованные
+                            </button>
+                            {% if user.is_authenticated %}
+                            <a href="{% url 'catalog:my_products' %}" class="btn btn-outline-primary">
+                                Мои товары
+                            </a>
+                            {% endif %}
                         </div>
                     </div>
-                {% endfor %}
+                </div>
             </div>
-        {% else %}
-            <div class="alert alert-info">Продукты не найдены.</div>
-        {% endif %}
+
+            <!-- Статистика -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card border-0 bg-light">
+                        <div class="card-body text-center">
+                            <h3 class="text-primary">{{ products.count|default:"0" }}</h3>
+                            <p class="text-muted mb-0">Всего товаров</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 bg-light">
+                        <div class="card-body text-center">
+                            <h3 class="text-success">{{ published_count|default:"0" }}</h3>
+                            <p class="text-muted mb-0">Опубликовано</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 bg-light">
+                        <div class="card-body text-center">
+                            <h3 class="text-warning">{{ user_products_count|default:"0" }}</h3>
+                            <p class="text-muted mb-0">Ваших товаров</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card border-0 bg-light">
+                        <div class="card-body text-center">
+                            <h3 class="text-info">{{ category_count|default:"0" }}</h3>
+                            <p class="text-muted mb-0">Категорий</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</body>
-</html>
+
+    <!-- Сетка товаров -->
+    {% if products %}
+    <div class="row g-4" id="productsGrid">
+        {% for product in products %}
+        <div class="col-lg-4 col-md-6 product-item"
+             data-published="{{ product.is_published|yesno:'true,false' }}"
+             data-category="{{ product.category.name|lower }}">
+            <div class="product-card h-100">
+                {% if product.image %}
+                <div class="position-relative overflow-hidden" style="height: 250px;">
+                    <img src="{{ product.image.url }}"
+                         class="w-100 h-100 object-fit-cover"
+                         alt="{{ product.name }}"
+                         loading="lazy">
+                    <div class="position-absolute top-0 end-0 m-3">
+                        {% if product.is_published %}
+                        <span class="badge bg-success">
+                            <i class="bi bi-check-circle me-1"></i>Опубликован
+                        </span>
+                        {% else %}
+                        <span class="badge bg-warning">
+                            <i class="bi bi-clock me-1"></i>Не опубликован
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% else %}
+                <div class="bg-light d-flex align-items-center justify-content-center"
+                     style="height: 250px;">
+                    <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                </div>
+                {% endif %}
+
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <a href="{% url 'catalog:product_detail' product.pk %}"
+                               class="text-decoration-none text-dark">
+                                <h5 class="card-title fw-bold mb-1">{{ product.name }}</h5>
+                            </a>
+                            <a href="{% url 'catalog:category_products' product.category.id %}"
+                               class="badge category-badge text-decoration-none">
+                                {{ product.category.name }}
+                            </a>
+                        </div>
+                        <span class="price-tag">{{ product.price }} ₽</span>
+                    </div>
+
+                    <p class="card-text text-muted mb-3">
+                        {{ product.description|truncatechars:120 }}
+                    </p>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">
+                            <i class="bi bi-person me-1"></i>{{ product.owner.username|default:"Админ" }}
+                        </small>
+                        <small class="text-muted">
+                            <i class="bi bi-calendar me-1"></i>{{ product.created_at|date:"d.m.Y" }}
+                        </small>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-transparent border-top-0 pt-0 pb-4 px-4">
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'catalog:product_detail' product.pk %}"
+                           class="btn btn-custom-primary">
+                            <i class="bi bi-eye me-1"></i>Подробнее
+                        </a>
+
+                        {% if user == product.owner or user.is_superuser %}
+                        <div class="btn-group w-100">
+                            <a href="{% url 'catalog:product_update' product.pk %}"
+                               class="btn btn-outline-warning">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            {% if product.is_published %}
+                            <button class="btn btn-outline-secondary"
+                                    onclick="changeStatus({{ product.pk }}, 'unpublish')"
+                                    title="Снять с публикации">
+                                <i class="bi bi-eye-slash"></i>
+                            </button>
+                            {% else %}
+                            <button class="btn btn-outline-success"
+                                    onclick="changeStatus({{ product.pk }}, 'publish')"
+                                    title="Опубликовать">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            {% endif %}
+                            <button class="btn btn-outline-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal{{ product.pk }}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+
+                        <!-- Модальное окно удаления -->
+                        <div class="modal fade" id="deleteModal{{ product.pk }}" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Удаление товара</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Вы уверены, что хотите удалить товар <strong>"{{ product.name }}"</strong>?</p>
+                                        <p class="text-danger">Это действие нельзя отменить.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                            Отмена
+                                        </button>
+                                        <a href="{% url 'catalog:product_delete' product.pk %}"
+                                           class="btn btn-danger">
+                                            Удалить
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Пагинация -->
+    {% if is_paginated %}
+    <div class="content-card mt-4">
+        <div class="p-4">
+            <nav aria-label="Навигация по страницам">
+                <ul class="pagination justify-content-center mb-0">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                            <i class="bi bi-chevron-left"></i> Назад
+                        </a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                            Вперед <i class="bi bi-chevron-right"></i>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+                <p class="text-center text-muted mt-2">
+                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+                </p>
+            </nav>
+        </div>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <!-- Сообщение, если товаров нет -->
+    <div class="content-card">
+        <div class="p-5 text-center">
+            <i class="bi bi-box-seam display-1 text-muted mb-4"></i>
+            <h3 class="mb-3">Товаров пока нет</h3>
+            <p class="text-muted mb-4">
+                Каталог товаров пуст. Будьте первым, кто добавит товар!
+            </p>
+            {% if user.is_authenticated %}
+            <a href="{% url 'catalog:product_create' %}" class="btn btn-custom-primary btn-lg">
+                <i class="bi bi-plus-circle me-2"></i>Добавить первый товар
+            </a>
+            {% else %}
+            <a href="{% url 'login' %}?next={% url 'catalog:product_list' %}"
+               class="btn btn-custom-primary btn-lg">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Войдите, чтобы добавить товар
+            </a>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Поиск товаров
+document.getElementById('searchInput').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    const productItems = document.querySelectorAll('.product-item');
+
+    productItems.forEach(item => {
+        const productName = item.querySelector('.card-title').textContent.toLowerCase();
+        const productDesc = item.querySelector('.card-text').textContent.toLowerCase();
+
+        if (productName.includes(searchTerm) || productDesc.includes(searchTerm)) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+});
+
+// Фильтрация товаров
+function filterProducts(filter) {
+    const productItems = document.querySelectorAll('.product-item');
+
+    productItems.forEach(item => {
+        const isPublished = item.dataset.published === 'true';
+
+        switch(filter) {
+            case 'published':
+                item.style.display = isPublished ? 'block' : 'none';
+                break;
+            case 'draft':
+                item.style.display = !isPublished ? 'block' : 'none';
+                break;
+            default:
+                item.style.display = 'block';
+        }
+    });
+}
+
+// Изменение статуса публикации
+function changeStatus(productId, action) {
+    const url = action === 'publish'
+        ? `/catalog/products/${productId}/publish/`
+        : `/catalog/products/${productId}/unpublish/`;
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            location.reload();
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Произошла ошибка при изменении статуса');
+    });
+}
+
+// Вспомогательная функция для получения CSRF токена
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Анимация при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    const productCards = document.querySelectorAll('.product-card');
+    productCards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.1}s`;
+        card.classList.add('animate__animated', 'animate__fadeInUp');
+    });
+});
+</script>
+
+<!-- Подключение библиотеки анимаций -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+{% endblock %}

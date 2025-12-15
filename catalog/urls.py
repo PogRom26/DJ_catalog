@@ -29,7 +29,7 @@ app_name = 'catalog'
 urlpatterns = [
     # Основные страницы
     path('', HomeView.as_view(), name='home'),
-    path('contact/', ContactView.as_view(), name='contact'),
+    path('contact/', ContactView.as_view(), name='contacts'),
 
     # Категории
     path('categories/', CategoryListView.as_view(), name='category_list'),
