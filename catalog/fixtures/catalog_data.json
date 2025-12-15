@@ -1,0 +1,182 @@
+[
+{
+  "model": "catalog.category",
+  "pk": 1,
+  "fields": {
+    "name": "Электроника",
+    "description": "Смартфоны, ноутбуки, планшеты и другая техника"
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 2,
+  "fields": {
+    "name": "Одежда",
+    "description": "Мужская, женская и детская одежда"
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 3,
+  "fields": {
+    "name": "Книги",
+    "description": "Художественная и образовательная литература"
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 4,
+  "fields": {
+    "name": "Спорт",
+    "description": "Спортивный инвентарь и одежда"
+  }
+},
+{
+  "model": "catalog.category",
+  "pk": 5,
+  "fields": {
+    "name": "Мебель",
+    "description": "Мебель для дома и офиса"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 1,
+  "fields": {
+    "name": "iPhone 15 Pro",
+    "description": "Смартфон Apple с камерой 48 МП",
+    "image": "",
+    "category": 1,
+    "price": "89999.99",
+    "owner": null,
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-15T10:00:00Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 2,
+  "fields": {
+    "name": "MacBook Air M2",
+    "description": "Ноутбук Apple на чипе M2 с дисплеем Liquid Retina",
+    "image": "",
+    "category": 1,
+    "price": "119999.00",
+    "owner": null,
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 3,
+  "fields": {
+    "name": "Футболка хлопковая",
+    "description": "Комфортная футболка из 100% хлопка, все размеры",
+    "image": "",
+    "category": 2,
+    "price": "1999.99",
+    "owner": null,
+    "created_at": "2024-01-15T11:00:00Z",
+    "updated_at": "2024-01-15T11:00:00Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 4,
+  "fields": {
+    "name": "Джинсы классические",
+    "description": "Классические джинсы синего цвета, прямой крой",
+    "image": "",
+    "category": 2,
+    "price": "4599.99",
+    "owner": null,
+    "created_at": "2024-01-15T11:15:00Z",
+    "updated_at": "2024-01-15T11:15:00Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 5,
+  "fields": {
+    "name": "Война и мир",
+    "description": "Роман Льва Толстого в твердом переплете, полное издание",
+    "image": "",
+    "category": 3,
+    "price": "1500.00",
+    "owner": null,
+    "created_at": "2024-01-15T12:00:00Z",
+    "updated_at": "2024-01-15T12:00:00Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 6,
+  "fields": {
+    "name": "Python для начинающих",
+    "description": "Учебник по программированию на Python с примерами",
+    "image": "",
+    "category": 3,
+    "price": "2500.00",
+    "owner": null,
+    "created_at": "2024-01-15T12:30:00Z",
+    "updated_at": "2024-01-15T12:30:00Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 7,
+  "fields": {
+    "name": "Беговая дорожка",
+    "description": "Электрическая беговая дорожка для дома, складная",
+    "image": "",
+    "category": 4,
+    "price": "34999.50",
+    "owner": null,
+    "created_at": "2024-01-15T13:00:00Z",
+    "updated_at": "2024-01-15T13:00:00Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 8,
+  "fields": {
+    "name": "Гантели 10 кг",
+    "description": "Набор разборных гантелей, общий вес 10 кг",
+    "image": "",
+    "category": 4,
+    "price": "2999.00",
+    "owner": null,
+    "created_at": "2024-01-15T13:15:00Z",
+    "updated_at": "2024-01-15T13:15:00Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 9,
+  "fields": {
+    "name": "Офисное кресло",
+    "description": "Эргономичное кресло для работы, регулируемая высота",
+    "image": "",
+    "category": 5,
+    "price": "12500.00",
+    "owner": null,
+    "created_at": "2024-01-15T14:00:00Z",
+    "updated_at": "2024-01-15T14:00:00Z"
+  }
+},
+{
+  "model": "catalog.product",
+  "pk": 10,
+  "fields": {
+    "name": "Компьютерный стол",
+    "description": "Стол для компьютера с полкой для клавиатуры",
+    "image": "",
+    "category": 5,
+    "price": "8900.00",
+    "owner": null,
+    "created_at": "2024-01-15T14:30:00Z",
+    "updated_at": "2024-01-15T14:30:00Z"
+  }
+}
+]
