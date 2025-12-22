@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load humanize %}
+
+{% block content %}
+<div class="container mt-4">
+    {% if category %}
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>{{ category.name }}</h1>
+            {% if category.description %}
+            <p class="lead">{{ category.description }}</p>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">📊 Статистика категории</h5>
+                    <ul class="list-unstyled mb-0">
+                        <li>Товаров: <strong>{{ category_stats.total_products }}</strong></li>
+                        <li>Просмотров: <strong>{{ category_stats.total_views|intcomma }}</strong></li>
+                        <li>Средняя цена: <strong>{{ category_stats.avg_price|floatformat:2|intcomma }} ₽</strong></li>
+                        <li>Новых за неделю: <strong>{{ category_stats.new_last_week }}</strong></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if subcategories %}
+    <div class="row mb-4">
+        <div class="col-12">
+            <h5>Подкатегории:</h5>
+            <div class="d-flex flex-wrap gap-2">
+                {% for subcat in subcategories %}
+                <a href="{% url 'catalog:category_products' subcat.id %}"
+                   class="btn btn-outline-primary btn-sm">
+                    {{ subcat.name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Фильтры и сортировка -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <select class="form-select" id="sortSelect">
+                                <option selected>Сортировка</option>
+                                <option value="price_asc">Цена по возрастанию</option>
+                                <option value="price_desc">Цена по убыванию</option>
+                                <option value="views_desc">По популярности</option>
+                                <option value="newest">Сначала новые</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" placeholder="Поиск в категории...">
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="onlyAvailable">
+                                <label class="form-check-label" for="onlyAvailable">
+                                    Только в наличии
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Список товаров -->
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 product-card">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}"
+                     style="height: 200px; object-fit: cover;">
+                {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
+                     style="height: 200px;">
+                    <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                </div>
+                {% endif %}
+
+                <div class="card-body d-flex flex-column">
+                    <h6 class="card-title">{{ product.name|truncatechars:50 }}</h6>
+
+                    <div class="mb-2">
+                        <span class="badge bg-{{ product.publish_status }}">
+                            {{ product.get_publish_status_display }}
+                        </span>
+                        {% if product.views_count > 100 %}
+                        <span class="badge bg-warning">🔥 Популярный</span>
+                        {% endif %}
+                    </div>
+
+                    <p class="card-text flex-grow-1 small">
+                        {{ product.description|truncatechars:80|default:"Описание отсутствует" }}
+                    </p>
+
+                    <div class="mt-auto">
+                        <p class="h5 text-primary mb-2">{{ product.price|intcomma }} ₽</p>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-outline-primary">
+                                Подробнее
+                            </a>
+                            <small class="text-muted">
+                                <i class="bi bi-eye"></i> {{ product.views_count }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                {% trans 'В этой категории пока нет товаров.' %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Пагинация -->
+    {% if is_paginated %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">&laquo;</a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">&raquo;</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="alert alert-danger">
+        Категория не найдена или неактивна.
+    </div>
+    {% endif %}
+
+    <!-- Информация о кеше (только для staff) -->
+    {% if request.user.is_staff and cache_info %}
+    <div class="mt-5 card border-info">
+        <div class="card-header bg-info text-white">
+            <h6 class="mb-0">🧠 Информация о кешировании</h6>
+        </div>
+        <div class="card-body">
+            <p><strong>Ключ кеша:</strong> <code>{{ cache_info.key }}</code></p>
+            <p><strong>Статус:</strong>
+                <span class="badge bg-{% if cache_info.exists %}success{% else %}danger{% endif %}">
+                    {{ cache_info.exists|yesno:"В кеше,Не в кеше" }}
+                </span>
+            </p>
+            <button class="btn btn-sm btn-outline-warning"
+                    onclick="clearCategoryCache({{ category.id }})">
+                🗑️ Очистить кеш категории
+            </button>
+        </div>
+    </div>
+
+    <script>
+    function clearCategoryCache(categoryId) {
+        fetch(`/catalog/categories/${categoryId}/clear-cache/`, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+                'Content-Type': 'application/json'
+            }
+        }).then(response => response.json())
+          .then(data => {
+              if (data.status === 'success') {
+                  alert(data.message);
+                  location.reload();
+              } else {
+                  alert('Ошибка: ' + data.message);
+              }
+          });
+    }
+    </script>
+    {% endif %}
+</div>
+
+<style>
+.product-card:hover {
+    transform: translateY(-5px);
+    transition: transform 0.2s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+</style>
+{% endblock %}
