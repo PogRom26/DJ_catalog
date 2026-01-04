@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>{% trans 'Мои товары' %}</h1>
+        
+        <a href="{% url 'products:create' %}" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> {% trans 'Добавить товар' %}
+        </a>
+    </div>
+    
+    <!-- Статистика -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">{{ products.count }}</h5>
+                    <p class="card-text">{% trans 'Всего товаров' %}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">{{ products.published.count }}</h5>
+                    <p class="card-text">{% trans 'Опубликовано' %}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">{{ products.draft.count }}</h5>
+                    <p class="card-text">{% trans 'Черновики' %}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">{{ products.pending.count }}</h5>
+                    <p class="card-text">{% trans 'На проверке' %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Список товаров -->
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+            {% include 'products/_product_card.html' with product=product %}
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                {% trans 'У вас пока нет товаров.' %}
+                <a href="{% url 'products:create' %}" class="alert-link">
+                    {% trans 'Создайте первый товар' %}
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Пагинация -->
+    {% if is_paginated %}
+    {% include 'products/_pagination.html' %}
+    {% endif %}
+</div>
+{% endblock %}
